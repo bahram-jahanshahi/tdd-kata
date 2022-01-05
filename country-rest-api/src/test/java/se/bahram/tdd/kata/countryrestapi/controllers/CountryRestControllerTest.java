@@ -23,17 +23,7 @@ public class CountryRestControllerTest {
         mockMvc
                 .perform(get("/countries/"))
                 .andExpect(status().isOk())
-                .andExpect(content().json("[{id: 1, title: Sweden}]"))
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON));
-    }
-
-    @Test
-    void when_get_1_it_should_return_country() throws Exception {
-        mockMvc
-                .perform(get("/countries/1"))
-                .andExpect(status().isOk())
-                .andExpect(content().json("{id: 1, title: Sweden}"))
-                .andExpect(content().contentType(MediaType.APPLICATION_JSON));;
     }
 
     @Test
