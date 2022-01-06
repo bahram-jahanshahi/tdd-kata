@@ -1,5 +1,6 @@
 package se.bahram.tdd.kata.countryrestapi.controllers;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import se.bahram.tdd.kata.countryrestapi.commons.NumberUtils;
@@ -48,8 +49,11 @@ public class CountryRestController {
     private ResponseEntity delete(@PathVariable("id") String id) {
         Optional<Country> optionalCountry = countryService.findById(Integer.parseInt(id));
         if (optionalCountry.isPresent()) {
-            countryService.delete(Integer.parseInt(id));
-            return ResponseEntity.ok().build();
+            boolean isDeleted = countryService.delete(Integer.parseInt(id));
+            if (!isDeleted) {
+                return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
+            }
+            return ResponseEntity.noContent().build();
         }
         return ResponseEntity.notFound().build();
     }

@@ -78,18 +78,29 @@ public class CountryRestControllerTest {
     }
 
     @Test
-    void when_delete_1_should_status_ok() throws Exception{
+    void when_delete_1_should_status_no_content_204() throws Exception{
         when(countryService.findById(1)).thenReturn(Optional.of(new Country(1, "Sweden")));
+        when(countryService.delete(1)).thenReturn(true);
         mockMvc
                 .perform(delete("/countries/1"))
-                .andExpect(status().isOk());
+                .andExpect(status().isNoContent());
     }
 
     @Test
     void when_delete_2_should_status_not_found() throws Exception{
         when(countryService.findById(2)).thenReturn(Optional.empty());
+        when(countryService.delete(2)).thenReturn(false);
         mockMvc
                 .perform(delete("/countries/2"))
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void when_delete_3_should_status_not_modified_304() throws Exception{
+        when(countryService.findById(3)).thenReturn(Optional.of(new Country(3, "Finland")));
+        when(countryService.delete(3)).thenReturn(false);
+        mockMvc
+                .perform(delete("/countries/3"))
+                .andExpect(status().isNotModified());
     }
 }
