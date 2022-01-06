@@ -19,4 +19,11 @@ public class CountryServiceTest {
         CountryService countryService = new CountryService();
         assertThat(countryService.findAll().size()).isEqualTo(0);
     }
+
+    @Test
+    void when_delete_1_it_should_return_false() {
+        CountryService countryService = new CountryService();
+        assertThat(countryService.delete(1)).isEqualTo(false);
+    }
+
 }

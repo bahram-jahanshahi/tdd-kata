@@ -1,10 +1,7 @@
 package se.bahram.tdd.kata.countryrestapi.controllers;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import se.bahram.tdd.kata.countryrestapi.commons.NumberUtils;
 import se.bahram.tdd.kata.countryrestapi.model.Country;
 import se.bahram.tdd.kata.countryrestapi.services.CountryService;
@@ -43,6 +40,16 @@ public class CountryRestController {
         Optional<Country> country = this.countryService.findById(Integer.parseInt(id));
         if (country.isPresent()) {
             return ResponseEntity.ok(country.get());
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    @DeleteMapping("/{id}")
+    private ResponseEntity delete(@PathVariable("id") String id) {
+        Optional<Country> optionalCountry = countryService.findById(Integer.parseInt(id));
+        if (optionalCountry.isPresent()) {
+            countryService.delete(Integer.parseInt(id));
+            return ResponseEntity.ok().build();
         }
         return ResponseEntity.notFound().build();
     }

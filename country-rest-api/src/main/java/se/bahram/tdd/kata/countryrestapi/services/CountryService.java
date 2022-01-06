@@ -16,4 +16,8 @@ public class CountryService {
     public List<Country> findAll() {
         return Arrays.asList();
     }
+
+    public boolean delete(int i) {
+        return false;
+    }
 }
