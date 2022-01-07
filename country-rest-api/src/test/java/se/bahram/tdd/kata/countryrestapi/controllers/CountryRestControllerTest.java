@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import se.bahram.tdd.kata.countryrestapi.model.Country;
@@ -78,7 +79,7 @@ public class CountryRestControllerTest {
     }
 
     @Test
-    void when_delete_1_should_status_no_content_204() throws Exception{
+    void when_delete_1_should_status_no_content_204() throws Exception {
         when(countryService.findById(1)).thenReturn(Optional.of(new Country(1, "Sweden")));
         when(countryService.delete(1)).thenReturn(true);
         mockMvc
@@ -87,7 +88,7 @@ public class CountryRestControllerTest {
     }
 
     @Test
-    void when_delete_2_should_status_not_found() throws Exception{
+    void when_delete_2_should_status_not_found() throws Exception {
         when(countryService.findById(2)).thenReturn(Optional.empty());
         when(countryService.delete(2)).thenReturn(false);
         mockMvc
@@ -96,11 +97,28 @@ public class CountryRestControllerTest {
     }
 
     @Test
-    void when_delete_3_should_status_not_modified_304() throws Exception{
+    void when_delete_3_should_status_not_modified_304() throws Exception {
         when(countryService.findById(3)).thenReturn(Optional.of(new Country(3, "Finland")));
         when(countryService.delete(3)).thenReturn(false);
         mockMvc
                 .perform(delete("/countries/3"))
                 .andExpect(status().isNotModified());
+    }
+
+    @Test
+    void when_save_sweden_it_should_return_4_and_status_created() throws Exception {
+        when(countryService.save("Sweden")).thenReturn(4);
+        mockMvc
+                .perform(post("/countries/Sweden"))
+                .andExpect(header().string(HttpHeaders.LOCATION, "/countries/4"))
+                .andExpect(status().isCreated());
+    }
+
+    @Test
+    void when_save_something_wrong_it_should_return_bad_request() throws Exception {
+        when(countryService.save("SOMETHING_WRONG")).thenThrow(IllegalArgumentException.class);
+        mockMvc
+                .perform(post("/countries/SOMETHING_WRONG"))
+                .andExpect(status().isBadRequest());
     }
 }
