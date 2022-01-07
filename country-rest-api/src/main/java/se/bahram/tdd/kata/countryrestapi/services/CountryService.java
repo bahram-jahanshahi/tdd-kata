@@ -20,4 +20,9 @@ public class CountryService {
     public boolean delete(int i) {
         return false;
     }
+
+    public int save(String title){
+        new Country(title);
+        return 1;
+    }
 }

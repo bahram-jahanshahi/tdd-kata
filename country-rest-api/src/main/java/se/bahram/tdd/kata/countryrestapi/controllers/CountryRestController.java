@@ -7,6 +7,7 @@ import se.bahram.tdd.kata.countryrestapi.commons.NumberUtils;
 import se.bahram.tdd.kata.countryrestapi.model.Country;
 import se.bahram.tdd.kata.countryrestapi.services.CountryService;
 
+import java.net.URI;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -58,5 +59,14 @@ public class CountryRestController {
         return ResponseEntity.notFound().build();
     }
 
+    @PostMapping("/{title}")
+    private ResponseEntity save(@PathVariable("title") String title) {
+        try {
+            int newId = countryService.save(title);
+            return ResponseEntity.created(URI.create("/countries/" + newId)).build();
+        } catch (IllegalArgumentException illegalArgumentException) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
 
 }
