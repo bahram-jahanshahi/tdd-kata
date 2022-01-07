@@ -109,7 +109,7 @@ public class CountryRestControllerTest {
     void when_save_sweden_it_should_return_4_and_status_created() throws Exception {
         when(countryService.save("Sweden")).thenReturn(4);
         mockMvc
-                .perform(post("/countries/Sweden"))
+                .perform(post("/countries").content("Sweden"))
                 .andExpect(header().string(HttpHeaders.LOCATION, "/countries/4"))
                 .andExpect(status().isCreated());
     }
@@ -118,7 +118,30 @@ public class CountryRestControllerTest {
     void when_save_something_wrong_it_should_return_bad_request() throws Exception {
         when(countryService.save("SOMETHING_WRONG")).thenThrow(IllegalArgumentException.class);
         mockMvc
-                .perform(post("/countries/SOMETHING_WRONG"))
+                .perform(post("/countries").content("SOMETHING_WRONG"))
                 .andExpect(status().isBadRequest());
     }
+
+    @Test
+    void when_update_sweden_it_should_return_status_accepted() throws Exception {
+        // given
+        when(countryService.update(1, "Sweden")).thenReturn(true);
+        // when
+        mockMvc
+                .perform(put("/countries/1").content("Sweden"))
+                .andExpect(status().isAccepted());
+
+    }
+
+    @Test
+    void when_update_something_wrong_it_should_return_status_bad_request() throws Exception {
+        // given
+        when(countryService.update(1, "SOMETHING_WRONG")).thenReturn(false);
+        // when
+        mockMvc
+                .perform(put("/countries/1").content("SOMETHING_WRONG"))
+                .andExpect(status().isBadRequest());
+    }
+
+
 }

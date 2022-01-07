@@ -59,8 +59,8 @@ public class CountryRestController {
         return ResponseEntity.notFound().build();
     }
 
-    @PostMapping("/{title}")
-    private ResponseEntity save(@PathVariable("title") String title) {
+    @PostMapping("")
+    private ResponseEntity save(@RequestBody String title) {
         try {
             int newId = countryService.save(title);
             return ResponseEntity.created(URI.create("/countries/" + newId)).build();
@@ -69,4 +69,13 @@ public class CountryRestController {
         }
     }
 
+    @PutMapping("/{id}")
+    private ResponseEntity update(@PathVariable("id") String id, @RequestBody String title) {
+
+        if (this.countryService.update(Integer.parseInt(id), title)) {
+            return ResponseEntity.accepted().build();
+        }
+
+        return ResponseEntity.badRequest().build();
+    }
 }
