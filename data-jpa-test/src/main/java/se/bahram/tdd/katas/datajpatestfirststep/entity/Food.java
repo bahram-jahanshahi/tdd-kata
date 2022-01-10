@@ -3,13 +3,16 @@ package se.bahram.tdd.katas.datajpatestfirststep.entity;
 import org.apache.commons.lang3.Validate;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
 public class Food {
 
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Integer id;
     private String title;
     private int price;
 
@@ -30,5 +33,9 @@ public class Food {
 
     public int getPrice() {
         return this.price;
+    }
+
+    public Object getId() {
+        return this.id;
     }
 }
